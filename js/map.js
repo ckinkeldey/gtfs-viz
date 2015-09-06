@@ -8,6 +8,17 @@ var markerGroup, stopMarkerGroup, polylineGroup;
 
 var reliability;
 
+var finishIcon = L.icon({
+    iconUrl: '../image/flag_marker_red.png',
+//    shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [40, 30] // size of the icon
+//    shadowSize:   [50, 64], // size of the shadow
+//    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+//    shadowAnchor: [4, 62],  // the same for the shadow
+//    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
 function createMap() {
 	var centerLatLon = new L.LatLng(0,0);
 	
@@ -66,10 +77,12 @@ function drawPlan(plan) {
 function drawMarkers(fromLatLon, toLatLon) {
 		var fromMarker = L.marker(fromLatLon, {
 			draggable:true})
+		.bindLabel('Start')
   		.on('dragend', function(e) {
   			getPlan(e.target._latlng, toLatLon, drawPlan);
   		});
-  		var toMarker = L.marker(toLatLon, {draggable:true})
+  		var toMarker = L.marker(toLatLon, {draggable:true, icon:finishIcon})
+  		.bindLabel('Finish')
   		.on('dragend', function(e) {
   			getPlan(fromLatLon, e.target._latlng, drawPlan);
   		});
@@ -89,7 +102,7 @@ function drawTrips(itineraries) {
 			if (leg.mode === "WALK" 
 				&& i > 0 && i < itinerary.legs.length-1) {  // do not show reliability for walk to and from the start and end
 				var stopMarker = new L.circleMarker(geometry[geometry.length-1],
-				{ 
+				{ color:"white",
 				fill : true,
 				fillColor: getCircleColor(leg.reliability)
 				,fillOpacity:1});

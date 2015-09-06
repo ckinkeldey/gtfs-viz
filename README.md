@@ -25,7 +25,6 @@ In a 'real' project I would first setup a database (e.g., PostgreSQL/PostGIS) to
 The routing is done using [OpenTripPlanner](http://opentripplanner.org "OpenTripPlanner") 0.18.
 
 [Leaflet](http://http://leafletjs.com "Leaflet") is used as map client.
-
-Basemap: [CartoDB base-dark](https://github.com/CartoDB/cartodb/wiki/BaseMaps-available "CartoDB base-dark")
-
-Color scheme: [5-class Spectral](http://colorbrewer2.org/?type=diverging&scheme=Spectral&n=5 "5-class Spectral") from [ColorBrewer](http://colorbrewer2.org "ColorBrewer")
+[Leaflet label by Mapbox](https://www.mapbox.com/mapbox.js/example/v1.0.0/leaflet-label/ Leaflet label by Mapbox) is used for simple labeling.  
+The basemap is [CartoDB base-dark](https://github.com/CartoDB/cartodb/wiki/BaseMaps-available "CartoDB base-dark")  
+The color scheme for reliability is [5-class Spectral](http://colorbrewer2.org/?type=diverging&scheme=Spectral&n=5 "5-class Spectral") from [ColorBrewer](http://colorbrewer2.org "ColorBrewer")

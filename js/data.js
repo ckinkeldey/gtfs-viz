@@ -28,6 +28,7 @@ function getOverallReliability(itinerary) {
 function computeReliabilityInfo(plan) {
 	reliability = [];
 	$.each(plan.itineraries, function(i, itinerary) {
+		if (i==0 || i==plan.itineraries.length-1)
 		$.each(itinerary.legs, function(i, leg) {
 			if (leg.mode === "WALK") {
 				leg.reliability = 1.0 - 0.1*Math.random();
