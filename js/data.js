@@ -5,7 +5,7 @@ function getPlan(from, to, drawPlan) {
 	    dataType: 'JSON',
 	    success: function(data) {
 	    	if (data.plan !== undefined) {
-		    	addReliabilityInfo(data.plan);
+	    		computeReliabilityInfo(data.plan);
 		    	drawPlan(data.plan);
 	    	}
 	    }, error: function() {
@@ -14,7 +14,18 @@ function getPlan(from, to, drawPlan) {
 	});
 }
 
-function addReliabilityInfo(plan) {
+// Compute overall reliability for an itinerary based on transfers
+function getOverallReliability(itinerary) {
+	var overall = 1.0;
+	for (var i = 0; i < itinerary.legs.length; i++) {
+		if (itinerary.legs[i].reliability !== undefined) {
+			overall *= itinerary.legs[i].reliability;
+		}
+	}
+	return overall;
+}
+
+function computeReliabilityInfo(plan) {
 	reliability = [];
 	$.each(plan.itineraries, function(i, itinerary) {
 		$.each(itinerary.legs, function(i, leg) {

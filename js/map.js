@@ -13,6 +13,18 @@ function createMap() {
 	
     map = L.map('map');
    
+    var bgLayer = 
+//    		L.tileLayer(
+//    		'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png',
+//    		{
+//    	attribution : 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+//})
+			L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+			})
+    			
+    		.addTo(map);
+    
     $.ajax(url, {
 //      data: { routerId : 'default' },            
       dataType: 'JSON',
@@ -33,13 +45,6 @@ function createMap() {
 	var from = [19.4 + Math.random()*0.01, -99.1-Math.random()*0.01];
 	var to = [19.43 + Math.random()*0.01, -99.2+Math.random()*0.01];
     
-	var stamenLayer = L.tileLayer(
-		'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-		{
-			attribution : 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-		})
-		.addTo(map);
-	
 	addLegend();
 	
 	getPlan(from, to, drawPlan);
@@ -49,16 +54,6 @@ function createMap() {
 //    .setContent('<p>Hello!<br/>Please click on the map twice to define start and goal of your travel.</p>')
 //    .openOn(map);
 }	
-
-function getOverallReliability(itinerary) {
-	var overall = 1.0
-	for (var i = 0; i < itinerary.legs.length; i++) {
-		if (itinerary.legs[i].reliability !== undefined) {
-			overall *= itinerary.legs[i].reliability;
-		}
-	}
-	return overall;
-}
 
 function drawPlan(plan) {
 	clearMap();
