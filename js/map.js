@@ -10,13 +10,7 @@ var reliability;
 
 var finishIcon = L.icon({
     iconUrl: '../image/flag_marker_red.png',
-//    shadowUrl: 'leaf-shadow.png',
-
     iconSize:     [40, 40] // size of the icon
-//    shadowSize:   [50, 64], // size of the shadow
-//    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-//    shadowAnchor: [4, 62],  // the same for the shadow
-//    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
 function createMap() {
@@ -25,19 +19,13 @@ function createMap() {
     map = L.map('map');
    
     var bgLayer = 
-//    		L.tileLayer(
-//    		'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png',
-//    		{
-//    	attribution : 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-//})
-			L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-			})
-    			
-    		.addTo(map);
+		L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+		})
+			
+		.addTo(map);
     
     $.ajax(url, {
-//      data: { routerId : 'default' },            
       dataType: 'JSON',
       success: function(data) {
       	var lat = 0, lon = 0;
@@ -61,10 +49,6 @@ function createMap() {
 	
 	getPlan(from, to, drawPlan);
 	
-//	var popup = L.popup()
-//    .setLatLng(centerLatLon)
-//    .setContent('<p>Hello!<br/>Please click on the map twice to define start and goal of your travel.</p>')
-//    .openOn(map);
 }	
 
 function drawPlan(plan) {
@@ -108,12 +92,6 @@ function drawTrips(itineraries) {
 				fillColor: getColor(leg.reliability)
 				,fillOpacity:1})
 				.bindPopup('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>');
-//				stopMarker.on("click", function(e) {
-//					var popup = L.popup()
-//				    .setLatLng(e.latlng)
-//				    .setContent('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>')
-//				    .openOn(map);
-//				});
 				stopMarkers.push(stopMarker);
 			}
 		})
@@ -141,7 +119,6 @@ function drawTrips(itineraries) {
 		    .setLatLng(e.latlng)
 		    .setContent('<p>Reliability of this trip: <br />'+Math.round(100*reliability[polylines.indexOf(this)])+'%</p>')
 		    .openOn(map);
-//			alert(reliability[polylines.indexOf(this)]);
 		});
 		polylines.push(polyline);
 		polyline.options.color = getColor(reliability[i]);
@@ -196,7 +173,6 @@ function getColor(reliability) {
 		return circleColors[0];
 	}
 	var index = Math.floor((reliability-0.9)/0.1 * (circleColors.length-1));
-//	console.log(reliability + " -> " + circleColors[index]);
 	return circleColors[index]; 
 }
 

@@ -14,17 +14,7 @@ function getPlan(from, to, drawPlan) {
 	});
 }
 
-// Compute overall reliability for an itinerary based on transfers
-function getOverallReliability(itinerary) {
-	var overall = 1.0;
-	for (var i = 0; i < itinerary.legs.length; i++) {
-		if (itinerary.legs[i].reliability !== undefined) {
-			overall *= itinerary.legs[i].reliability;
-		}
-	}
-	return overall;
-}
-
+//Reliability for a transfer point
 function computeReliabilityInfo(plan) {
 	reliability = [];
 	$.each(plan.itineraries, function(i, itinerary) {
@@ -40,6 +30,18 @@ function computeReliabilityInfo(plan) {
 	});
 }
 
+// Overall reliability for an itinerary based on transfers
+function getOverallReliability(itinerary) {
+	var overall = 1.0;
+	for (var i = 0; i < itinerary.legs.length; i++) {
+		if (itinerary.legs[i].reliability !== undefined) {
+			overall *= itinerary.legs[i].reliability;
+		}
+	}
+	return overall;
+}
+
+// decode "encoded algortihm format"
 function decodePoints(encoded, precision) {
     precision = Math.pow(10, -precision);
     var len = encoded.length, index=0, lat=0, lng = 0, array = [];
