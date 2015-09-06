@@ -9,6 +9,7 @@ The idea was to show the reliability of planned trips, i.e., the probability tha
 ## Usage
 Start an OpenTripPlanner server instance in the project directory:  
 `java -Xmx2G -jar lib/otp-0.18.0.jar --build data/ --inMemory`  
+(or change base url in `index.html`)
 
 Start local server in the project directory, e.g. using PHP:  
 `php -S localhost:8000`  

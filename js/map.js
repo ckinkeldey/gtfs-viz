@@ -12,7 +12,7 @@ var finishIcon = L.icon({
     iconUrl: '../image/flag_marker_red.png',
 //    shadowUrl: 'leaf-shadow.png',
 
-    iconSize:     [40, 30] // size of the icon
+    iconSize:     [40, 40] // size of the icon
 //    shadowSize:   [50, 64], // size of the shadow
 //    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
 //    shadowAnchor: [4, 62],  // the same for the shadow
@@ -56,6 +56,7 @@ function createMap() {
 	var from = [19.4 + Math.random()*0.01, -99.1-Math.random()*0.01];
 	var to = [19.43 + Math.random()*0.01, -99.2+Math.random()*0.01];
     
+	addHeadline();
 	addLegend();
 	
 	getPlan(from, to, drawPlan);
@@ -105,14 +106,14 @@ function drawTrips(itineraries) {
 				{ color:"white",
 				fill : true,
 				fillColor: getCircleColor(leg.reliability)
-				,fillOpacity:1});
-				stopMarker.bindPopup('reliability: ' + leg.reliability);
-				stopMarker.on("click", function(e) {
-					var popup = L.popup()
-				    .setLatLng(e.latlng)
-				    .setContent('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>')
-				    .openOn(map);
-				});
+				,fillOpacity:1})
+				.bindPopup('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>');
+//				stopMarker.on("click", function(e) {
+//					var popup = L.popup()
+//				    .setLatLng(e.latlng)
+//				    .setContent('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>')
+//				    .openOn(map);
+//				});
 				stopMarkers.push(stopMarker);
 			}
 		})
@@ -149,13 +150,10 @@ function drawTrips(itineraries) {
 	polylineGroup = L.featureGroup(polylines).addTo(map);
 	stopMarkerGroup = new L.featureGroup(stopMarkers).addTo(map);
 	map.fitBounds(polylineGroup.getBounds(), {padding:[100, 100]});
-	
-	
-
 }
 
 function addLegend() {
-	var legend = L.control({position: 'bottomright'});
+	var legend = L.control({position: 'topright'});
 	legend.onAdd = function (map) {
 
 	    var div = L.DomUtil.create('div', 'info legend'),
@@ -167,13 +165,31 @@ function addLegend() {
 	    for (var i = 0; i < grades.length; i++) {
 	        div.innerHTML +=
 	            '<i style="background:' + circleColors[i] + '"></i> ' +
-	            (grades[i+1] ? grades[i] + '%&ndash;' + grades[i+1] + '%<br>' : '>'+grades[i]+"%");
+	            (i==0 ? '<'+grades[i+1]+"%<br>":
+	            (grades[i+1] ? grades[i] + '%&ndash;' + grades[i+1] + '%<br>' : '>'+grades[i]+"%"));
 	    }
 
 	    return div;
 	};
 
 	legend.addTo(map);
+}
+
+function addHeadline() {
+	var headline = L.control({position: 'topleft'});
+	headline.onAdd = function (map) {
+
+	    var div = L.DomUtil.create('div', 'info legend'),
+	        grades = [90, 92, 94, 96, 98],
+	        labels = [];
+
+	    div.innerHTML += "<h2>Welcome to GTFS Viz Mexico City!</h2>" +
+	    		"Drag markers for start and finish to choose a route.<br>Click on circles and lines for more information about their reliability.";
+
+	    return div;
+	};
+
+	headline.addTo(map);
 }
 
 function getCircleColor(reliability) {
