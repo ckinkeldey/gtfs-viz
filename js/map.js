@@ -172,7 +172,7 @@ function getColor(reliability) {
 	if (reliability < 0.92) {
 		return circleColors[0];
 	}
-	var index = Math.floor((reliability-0.9)/0.1 * (circleColors.length-1));
+	var index = Math.round((reliability-0.9)/0.1 * (circleColors.length-1));
 	return circleColors[index]; 
 }
 
