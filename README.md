@@ -5,6 +5,7 @@ The idea could be especially useful when irregularities of one or more lines (e.
  
 *Since the effort for the estimation of reliability from supplementary data would have been too much I generate random probabilities for the transfer points to demonstrate the idea.*
 
+![gtfs-viz](http://kinkeldey.com/ally/gtfs-viz.png)
 
 ## Usage
 Start an OpenTripPlanner server instance in the project directory:  
