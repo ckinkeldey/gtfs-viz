@@ -1,4 +1,4 @@
-var colors = ['red', 'blue', 'green', 'darkred', 'cadetblue', 'darkgreen', 'orange', 'purple', 'darkpurple'];
+var colors = ['darkred', 'darkblue', 'darkgreen', 'orange', 'purple', 'darkpurple'];
 // from http://colorbrewer2.org/?type=diverging&scheme=Spectral&n=5
 var circleColors = ['rgb(215,25,28)','rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)'];
 var map;
@@ -151,7 +151,7 @@ function addLegend() {
 	legend.onAdd = function (map) {
 
 	    var div = L.DomUtil.create('div', 'info legend'),
-	        grades = [100,97.5,95,92.5,90],
+	        grades = [90, 92, 94, 96, 98],
 	        labels = [];
 
 	    div.innerHTML += "<p><b>Reliability of transfer</b></p>"
@@ -159,7 +159,7 @@ function addLegend() {
 	    for (var i = 0; i < grades.length; i++) {
 	        div.innerHTML +=
 	            '<i style="background:' + circleColors[i] + '"></i> ' +
-	            (grades[i+1] ? grades[i+1] + '%&ndash;' + grades[i] + '%<br>' : '&ndash;'+grades[i]+"%");
+	            (grades[i+1] ? grades[i] + '%&ndash;' + grades[i+1] + '%<br>' : '>'+grades[i]+"%");
 	    }
 
 	    return div;
@@ -169,7 +169,7 @@ function addLegend() {
 }
 
 function getCircleColor(reliability) {
-	var index = Math.ceil((1-reliability)/0.1 * (circleColors.length-1));
+	var index = Math.floor((reliability-0.9)/0.1 * (circleColors.length-1));
 //	console.log(reliability + " -> " + circleColors[index]);
 	return circleColors[index]; 
 }
