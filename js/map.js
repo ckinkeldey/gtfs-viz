@@ -1,7 +1,6 @@
 var colors = ['red', 'blue', 'green', 'darkred', 'cadetblue', 'darkgreen', 'orange', 'purple', 'darkpurple'];
 // from http://colorbrewer2.org/?type=diverging&scheme=Spectral&n=5
-//var circleColors = ['rgb(215,25,28)','rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)'];
-var circleColors = [,'rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)' ,'rgb(215,25,28)'];
+var circleColors = ['rgb(215,25,28)','rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)'];
 var map;
 var from, to; 
 var fromMarker, toMarker
@@ -41,44 +40,15 @@ function createMap() {
 		})
 		.addTo(map);
 	
-	getPlan(from, to);
+	addLegend();
+	
+	getPlan(from, to, drawPlan);
 	
 //	var popup = L.popup()
 //    .setLatLng(centerLatLon)
 //    .setContent('<p>Hello!<br/>Please click on the map twice to define start and goal of your travel.</p>')
 //    .openOn(map);
 }	
-
-function getPlan(from, to) {
-	return $.ajax(url + "plan", {
-	    data: { fromPlace : from.toString(), toPlace : to.toString(),
-	    	date:"09-06-2015"},            
-	    dataType: 'JSON',
-	    success: function(data) {
-	    	if (data.plan !== undefined) {
-		    	addReliabilityInfo(data.plan);
-		    	drawPlan(data.plan);
-	    	}
-	    }, error: function() {
-	    	alert("Could not determine route!");
-	    }
-	});
-}
-
-function addReliabilityInfo(plan) {
-	reliability = [];
-	$.each(plan.itineraries, function(i, itinerary) {
-		$.each(itinerary.legs, function(i, leg) {
-			if (leg.mode === "WALK") {
-				leg.reliability = 1.0 - 0.1*Math.random();
-//				console.log("reliability = " + leg.reliability);
-			}
-		});
-		var overallReliability = getOverallReliability(itinerary);
-		 reliability.push(overallReliability);
-		 console.log("route reliability = " + overallReliability);
-	});
-}
 
 function getOverallReliability(itinerary) {
 	var overall = 1.0
@@ -102,11 +72,11 @@ function drawMarkers(fromLatLon, toLatLon) {
 		var fromMarker = L.marker(fromLatLon, {
 			draggable:true})
   		.on('dragend', function(e) {
-  			getPlan(e.target._latlng, toLatLon);
+  			getPlan(e.target._latlng, toLatLon, drawPlan);
   		});
   		var toMarker = L.marker(toLatLon, {draggable:true})
   		.on('dragend', function(e) {
-  			getPlan(fromLatLon, e.target._latlng);
+  			getPlan(fromLatLon, e.target._latlng, drawPlan);
   		});
   		markerGroup = new L.featureGroup([fromMarker, toMarker]).addTo(map);
 }
@@ -173,33 +143,33 @@ function drawTrips(itineraries) {
 	map.fitBounds(polylineGroup.getBounds(), {padding:[100, 100]});
 	
 	
-	
-	
-	var legend = L.control({position: 'bottomright'});
 
+}
+
+function addLegend() {
+	var legend = L.control({position: 'bottomright'});
 	legend.onAdd = function (map) {
 
 	    var div = L.DomUtil.create('div', 'info legend'),
-	        grades = [90, 92.5, 95, 97.5, 100],
+	        grades = [100,97.5,95,92.5,90],
 	        labels = [];
 
+	    div.innerHTML += "<p><b>Reliability of transfer</b></p>"
 	    // loop through our density intervals and generate a label with a colored square for each interval
 	    for (var i = 0; i < grades.length; i++) {
 	        div.innerHTML +=
 	            '<i style="background:' + circleColors[i] + '"></i> ' +
-	            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+	            (grades[i+1] ? grades[i+1] + '%&ndash;' + grades[i] + '%<br>' : '&ndash;'+grades[i]+"%");
 	    }
 
 	    return div;
 	};
 
 	legend.addTo(map);
-
-
 }
 
 function getCircleColor(reliability) {
-	var index = Math.floor((1-reliability)/0.1 * (circleColors.length-1));
+	var index = Math.ceil((1-reliability)/0.1 * (circleColors.length-1));
 //	console.log(reliability + " -> " + circleColors[index]);
 	return circleColors[index]; 
 }

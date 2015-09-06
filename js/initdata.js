@@ -1,4 +1,33 @@
+function getPlan(from, to, drawPlan) {
+	return $.ajax(url + "plan", {
+	    data: { fromPlace : from.toString(), toPlace : to.toString(),
+	    	date:"09-06-2015"},            
+	    dataType: 'JSON',
+	    success: function(data) {
+	    	if (data.plan !== undefined) {
+		    	addReliabilityInfo(data.plan);
+		    	drawPlan(data.plan);
+	    	}
+	    }, error: function() {
+	    	alert("Could not determine route!");
+	    }
+	});
+}
 
+function addReliabilityInfo(plan) {
+	reliability = [];
+	$.each(plan.itineraries, function(i, itinerary) {
+		$.each(itinerary.legs, function(i, leg) {
+			if (leg.mode === "WALK") {
+				leg.reliability = 1.0 - 0.1*Math.random();
+//				console.log("reliability = " + leg.reliability);
+			}
+		});
+		var overallReliability = getOverallReliability(itinerary);
+		 reliability.push(overallReliability);
+		 console.log("route reliability = " + overallReliability);
+	});
+}
 
 function decodePoints(encoded, precision) {
     precision = Math.pow(10, -precision);
