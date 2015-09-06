@@ -31,8 +31,8 @@ function createMap() {
       }
   });
     
-	var from = [19.41244,-99.13462];
-	var to = [19.43721,-99.11797];
+	var from = [19.4 + Math.random()*0.01, -99.1-Math.random()*0.01];
+	var to = [19.43 + Math.random()*0.01, -99.2+Math.random()*0.01];
     
 	var stamenLayer = L.tileLayer(
 		'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
@@ -129,12 +129,12 @@ function drawTrips(itineraries) {
 				fillColor: getCircleColor(leg.reliability)
 				,fillOpacity:1});
 				stopMarker.bindPopup('reliability: ' + leg.reliability);
-				stopMarker.on("mouseover", function(e) {
-					this.openPopup();
+				stopMarker.on("click", function(e) {
+					var popup = L.popup()
+				    .setLatLng(e.latlng)
+				    .setContent('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>')
+				    .openOn(map);
 				});
-				stopMarker.on('mouseout', function (e) {
-		            this.closePopup();
-		        });
 				stopMarkers.push(stopMarker);
 			}
 		})
