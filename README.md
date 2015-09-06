@@ -8,11 +8,12 @@ The idea could be especially useful when irregularities of one or more lines (e.
 ![gtfs-viz](http://kinkeldey.com/ally/gtfs-viz.png)
 
 ## Usage
-Start an OpenTripPlanner (OTP) server instance in the project directory:  
+*I could not make the application available over the web because I don't have a server with servlet container (needed for OpenTripPlanner).*
+
+Run the application on a local computer:
+Start an OpenTripPlanner (OTP) server instance in the project directory (Java 8 needed):  
 `java -Xmx2G -jar lib/otp-0.18.0.jar --build data/ --inMemory`  
 (or change base url to a different server in `index.html`)
-
-*I could not make the application available over the web because for that I would need a servlet container for OTP.*
 
 Start local server in the project directory, e.g. using PHP:  
 `php -S localhost:8000`  
