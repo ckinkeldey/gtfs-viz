@@ -1,40 +1,4 @@
-function initData(route_id) {
-	var p = 1.0;
-	 $.ajax(url + "index/routes/"+route_id+"/stops", {
-	        dataType: 'JSON',
-	        success: function(stops) {
-	        	$.each(stops,function(i, stop) {
-//	        		$.ajax(url + "index/stops/"+stops[0].id+"/stoptimes", {
-//	        	        dataType: 'JSON',
-//	        	        success: function(stoptime) {
-//	        	        	console.log(stoptime);
-//	        	        }
-        		$.get(url + "index/stops/"+stop.id+"/stoptimes", function(stoptimes) {
-//        	        	console.log(stoptimes.length);
-        	        	$.each(stoptimes,function(i, stoptime) {
-        	        		$.each(stoptime.times,function(i, time) {
-        	        			var random = 0.1;//Math.random();
-        	        			p *= random <= 0.1 ? (1.-random) : 1.;
-//	        	        		if (time.arrivalDelay > 0) {
-//	        	        			console.log("arrival delay == " + stoptime.times[0].arrivalDelay);
-//	        	        		}
-//	        	        		if (time.departureDelay > 0) {
-//	        	        			console.log("departure delay == " + stoptime.times[0].departureDelay);
-//	        	        		}
-        	        		});
-        	        	});
-        	        }
-	        		);
-	          	});
-	        },
-	        error: function(XMLHttpRequest, textStatus, errorThrown) {
-				alert("fail");
-			}
-	  });
-	 
-	 // overall probability
-     console.log("p == " + p);
-}
+
 
 function decodePoints(encoded, precision) {
     precision = Math.pow(10, -precision);

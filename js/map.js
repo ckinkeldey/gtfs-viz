@@ -1,20 +1,13 @@
 var colors = ['red', 'blue', 'green', 'darkred', 'cadetblue', 'darkgreen', 'orange', 'purple', 'darkpurple'];
 // from http://colorbrewer2.org/?type=diverging&scheme=Spectral&n=5
-var circleColors = ['rgb(215,25,28)','rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)'];
+//var circleColors = ['rgb(215,25,28)','rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)'];
+var circleColors = [,'rgb(253,174,97)','rgb(255,255,191)','rgb(171,221,164)','rgb(43,131,186)' ,'rgb(215,25,28)'];
 var map;
 var from, to; 
 var fromMarker, toMarker
 var markerGroup, stopMarkerGroup, polylineGroup;
 
 var reliability;
-
-var WarnIcon = L.Icon.extend({
-	options : {
-    iconUrl: '../img/warning_red.png',
-    iconSize:     [20, 20], // size of the icon
-    iconAnchor:   [10, 10]
-	}
-});
 
 function createMap() {
 	var centerLatLon = new L.LatLng(0,0);
@@ -81,15 +74,17 @@ function addReliabilityInfo(plan) {
 //				console.log("reliability = " + leg.reliability);
 			}
 		});
-//		 reliability.push(getOverallReliability(itinerary));
+		var overallReliability = getOverallReliability(itinerary);
+		 reliability.push(overallReliability);
+		 console.log("route reliability = " + overallReliability);
 	});
 }
 
 function getOverallReliability(itinerary) {
 	var overall = 1.0
 	for (var i = 0; i < itinerary.legs.length; i++) {
-		if (legs[i].reliability !== undefined) {
-			overall *= legs[i].reliability;
+		if (itinerary.legs[i].reliability !== undefined) {
+			overall *= itinerary.legs[i].reliability;
 		}
 	}
 	return overall;
@@ -126,7 +121,8 @@ function drawTrips(itineraries) {
 		$.each(itinerary.legs, function(i, leg) {
 			var nextLegGeom = decodePoints(leg.legGeometry.points, 5);
 			geometry = geometry.concat(nextLegGeom);
-			if (leg.mode === "WALK" && i > 0) {  // do not show reliability for walk to the station
+			if (leg.mode === "WALK" 
+				&& i > 0 && i < itinerary.legs.length-1) {  // do not show reliability for walk to and from the start and end
 				var stopMarker = new L.circleMarker(geometry[geometry.length-1],
 				{ 
 				fill : true,
@@ -164,14 +160,42 @@ function drawTrips(itineraries) {
 		    });
 		});
 		polyline.on('click', function(e) {
-			console.log("click " + e.target);
-//			alert(reliability[polylines.indexOf(e.target)]);
+			var popup = L.popup()
+		    .setLatLng(e.latlng)
+		    .setContent('<p>Reliability of this trip: <br />'+Math.round(100*reliability[polylines.indexOf(this)])+'%</p>')
+		    .openOn(map);
+//			alert(reliability[polylines.indexOf(this)]);
 		});
 		polylines.push(polyline);
 	});
 	polylineGroup = L.featureGroup(polylines).addTo(map);
 	stopMarkerGroup = new L.featureGroup(stopMarkers).addTo(map);
 	map.fitBounds(polylineGroup.getBounds(), {padding:[100, 100]});
+	
+	
+	
+	
+	var legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+	    var div = L.DomUtil.create('div', 'info legend'),
+	        grades = [90, 92.5, 95, 97.5, 100],
+	        labels = [];
+
+	    // loop through our density intervals and generate a label with a colored square for each interval
+	    for (var i = 0; i < grades.length; i++) {
+	        div.innerHTML +=
+	            '<i style="background:' + circleColors[i] + '"></i> ' +
+	            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+	    }
+
+	    return div;
+	};
+
+	legend.addTo(map);
+
+
 }
 
 function getCircleColor(reliability) {
