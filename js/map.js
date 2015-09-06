@@ -105,7 +105,7 @@ function drawTrips(itineraries) {
 				var stopMarker = new L.circleMarker(geometry[geometry.length-1],
 				{ color:"white",
 				fill : true,
-				fillColor: getCircleColor(leg.reliability)
+				fillColor: getColor(leg.reliability)
 				,fillOpacity:1})
 				.bindPopup('<p>Reliability of this transfer: <br />'+Math.round(100*leg.reliability)+'%</p>');
 //				stopMarker.on("click", function(e) {
@@ -119,13 +119,12 @@ function drawTrips(itineraries) {
 		})
 		
 		
-		var polyline = L.polyline(geometry, {color: colors[i],
-		opacity:0.5});
+		var polyline = L.polyline(geometry, {color:"white",
+			opacity:1});
 		
 		polyline.on('mouseover', function(e) {
 		    var layer = e.target;
 		    layer.setStyle({
-		    	color:colors[i],
 		        opacity: 1,
 		        weight: 5
 		    });
@@ -133,8 +132,7 @@ function drawTrips(itineraries) {
 		polyline.on('mouseout', function(e) {
 		    var layer = e.target;
 		    layer.setStyle({
-		        color: colors[i],
-		        opacity: 0.5,
+		        opacity: 1,
 		        weight: 5
 		    });
 		});
@@ -146,6 +144,7 @@ function drawTrips(itineraries) {
 //			alert(reliability[polylines.indexOf(this)]);
 		});
 		polylines.push(polyline);
+		polyline.options.color = getColor(reliability[i]);
 	});
 	polylineGroup = L.featureGroup(polylines).addTo(map);
 	stopMarkerGroup = new L.featureGroup(stopMarkers).addTo(map);
@@ -192,7 +191,10 @@ function addHeadline() {
 	headline.addTo(map);
 }
 
-function getCircleColor(reliability) {
+function getColor(reliability) {
+	if (reliability < 0.92) {
+		return circleColors[0];
+	}
 	var index = Math.floor((reliability-0.9)/0.1 * (circleColors.length-1));
 //	console.log(reliability + " -> " + circleColors[index]);
 	return circleColors[index]; 
